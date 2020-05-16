@@ -37,9 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djrec'
-    'rest_framework'
-]
+    'rest_framework',
+    'djrec',
+    ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
