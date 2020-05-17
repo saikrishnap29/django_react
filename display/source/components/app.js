@@ -1,52 +1,53 @@
-import React, { Component } from "react";
-import { render } from "react-dom";
-import Header from './layout/Header';
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: [],
-      loaded: false,
-      placeholder: "Loading"
-    };
-  }
+import React, { Component, Fragment } from 'react';
+import ReactDOM from 'react-dom';
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
 
+import { Provider as AlertProvider } from 'react-alert';
+import AlertTemplate from 'react-alert-template-basic';
+
+import Header from './layout/Header';
+import Dashboard from './leads/Dashboard';
+import Alerts from './layout/Alerts';
+import Login from './accounts/Login';
+import Register from './accounts/Register';
+import PrivateRoute from './common/PrivateRoute';
+
+import { Provider } from 'react-redux';
+import store from '../store';
+import { loadUser } from '../actions/auth';
+
+// Alert Options
+const alertOptions = {
+  timeout: 3000,
+  position: 'top center',
+};
+
+class App extends Component {
   componentDidMount() {
-    fetch("api/lead")
-      .then(response => {
-        if (response.status > 400) {
-          return this.setState(() => {
-            return { placeholder: "Something went wrong!" };
-          });
-        }
-        return response.json();
-      })
-      .then(data => {
-        this.setState(() => {
-          return {
-            data,
-            loaded: true
-          };
-        });
-      });
+    store.dispatch(loadUser());
   }
 
   render() {
     return (
-      <ul>
-        {this.state.data.map(contact => {
-          return (
-            <li key={contact.id}>
-              {contact.name} - {contact.email}
-            </li>
-          );
-        })}
-      </ul>
+      <Provider store={store}>
+        <AlertProvider template={AlertTemplate} {...alertOptions}>
+          <Router>
+            <Fragment>
+              <Header />
+              <Alerts />
+              <div className="container">
+                <Switch>
+                  <PrivateRoute exact path="/" component={Dashboard} />
+                  <Route exact path="/register" component={Register} />
+                  <Route exact path="/login" component={Login} />
+                </Switch>
+              </div>
+            </Fragment>
+          </Router>
+        </AlertProvider>
+      </Provider>
     );
   }
 }
 
-export default App;
-
-const container = document.getElementById("app");
-render(<App />, container);
+ReactDOM.render(<App />, document.getElementById('app'));
