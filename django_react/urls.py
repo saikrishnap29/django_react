@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('',include("djrec.urls")),
     path('', include('display.urls')),
+    path('', include('accounts.urls'))
    ]

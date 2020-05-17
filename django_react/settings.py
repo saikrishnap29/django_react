@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'djrec',
     'display',
+    'knox',
+    'accounts'
     ]
 
 MIDDLEWARE = [
@@ -51,6 +53,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication',)
+}
 
 ROOT_URLCONF = 'django_react.urls'
 
